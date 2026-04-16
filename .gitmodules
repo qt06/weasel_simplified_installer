@@ -1,0 +1,3 @@
+[submodule "userappdata/rime-ice"]
+	path = userappdata/rime-ice
+	url = https://github.com/iDvel/rime-ice

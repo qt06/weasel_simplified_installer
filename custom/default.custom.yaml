@@ -1,0 +1,5 @@
+patch:
+  menu/page_size: 9
+  punctuator/digit_separator_action: commit
+  switcher/hotkeys:
+    - Control+grave
