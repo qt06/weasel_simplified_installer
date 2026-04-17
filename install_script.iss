@@ -3,6 +3,8 @@
 #define AppVersion "0.17.4.41"
 #define AppPublisher "晴天博客"
 #define AppURL "https://www.qt06.com/
+#define VersionInfoCopyright "晴天博客"
+#define VERSIONINFODESCRIPTION "小狼毫输入法安装程序"
 #define OriginalSetupName "weasel-0.17.4.41.93eec2d-installer.exe"
 
 [Setup]
@@ -14,8 +16,11 @@ AppPublisher={#AppPublisher}
 AppPublisherURL={#AppURL}
 AppSupportURL={#AppURL}
 AppUpdatesURL={#AppURL}
-VersionInfoProductVersion={#AppVersion}
+VersionInfoCopyright={#VersionInfoCopyright}
 VersionInfoCompany={#AppPublisher}
+VersionInfoDescription={#VersionInfoDescription}
+VersionInfoProductName={#AppName}
+VersionInfoProductVersion={#AppVersion}
 VersionInfoVersion={#AppVersion}
 DefaultDirName={userappdata}\{#AppDir}
 DefaultGroupName={#AppName}
@@ -28,8 +33,6 @@ OutputDir=.
 OutputBaseFilename={#AppName}_weasel_{#APPVERSION}_simplified_installer
 Compression=lzma
 SolidCompression=yes
-;这里必须用管理员权限安装，因为有添加注册表动作。
-;PrivilegesRequired=lowest
 WizardStyle=modern
 
 [Languages]
@@ -40,16 +43,19 @@ Name: "chinesesimp"; MessagesFile: "compiler:Default.isl"
 ButtonNext=继续(&N) >
 
 [Tasks]
-
-Name: quanpin; Description: "使用全拼输入模式"; Flags: exclusive
-Name: shuangpin; Description: "使用微软双拼输入模式"; Flags: exclusive unchecked
+Name: use_custom; Description: "使用个性化配置"
+Name: default_english_mode; Description: "默认英语输入模式"
+Name: quanpin; Description: "使用全拼输入方案"; Flags: exclusive
+Name: shuangpin; Description: "使用微软双拼输入方案"; Flags: exclusive unchecked
 
 [Files]
 Source: "{#OriginalSetupName}"; DestDir: "{tmp}"
-Source: "userappdata\rime-ice\*"; DestDir: "{userappdata}\Rime"; Excludes: ".git*"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "custom\default.custom.yaml"; DestDir: "{userappdata}\Rime"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "custom\rime_ice.yaml"; DestDir: "{userappdata}\Rime"; DestName: "user.yaml"; tasks: quanpin; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "custom\double_pinyin_mspy.yaml"; DestDir: "{userappdata}\Rime"; DestName: "user.yaml"; Tasks: shuangpin; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "userappdata\rime-ice\*"; DestDir: "{userappdata}\{#AppDir}"; Excludes: ".git*"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "custom\default.custom.yaml"; DestDir: "{userappdata}\{#AppDir}"; Tasks: use_custom; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "custom\rime_ice.custom.yaml"; DestDir: "{userappdata}\{#AppDir}"; tasks: default_english_mode; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "custom\double_pinyin_mspy.custom.yaml"; DestDir: "{userappdata}\{#AppDir}"; tasks: default_english_mode; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "custom\rime_ice.user.yaml"; DestDir: "{userappdata}\{#AppDir}"; DestName: "user.yaml"; tasks: quanpin; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "custom\double_pinyin_mspy.user.yaml"; DestDir: "{userappdata}\{#AppDir}"; DestName: "user.yaml"; Tasks: shuangpin; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Run]
 Filename: "{tmp}\{#OriginalSetupName}"; StatusMsg: "正在安装"; Parameters: "/S"; Flags: skipifdoesntexist
