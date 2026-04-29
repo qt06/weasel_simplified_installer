@@ -44,18 +44,23 @@ ButtonNext=继续(&N) >
 
 [Tasks]
 Name: use_custom; Description: "使用个性化配置"
-Name: default_english_mode; Description: "默认英语输入模式"
-Name: quanpin; Description: "使用全拼输入方案"; Flags: exclusive
-Name: shuangpin; Description: "使用微软双拼输入方案"; Flags: exclusive unchecked
+Name: use_custom/default_english_mode; Description: "默认英语输入模式"
+Name: use_custom/quanpin; Description: "使用全拼输入方案"; Flags: exclusive
+Name: use_custom/mspy; Description: "使用微软双拼输入方案"; Flags: exclusive unchecked
+Name: use_custom/qhsp; Description: "使用清华双拼输入方案"; Flags: exclusive unchecked
 
 [Files]
 Source: "{#OriginalSetupName}"; DestDir: "{tmp}"
 Source: "userappdata\rime-ice\*"; DestDir: "{userappdata}\{#AppDir}"; Excludes: ".git*"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "custom\default.custom.yaml"; DestDir: "{userappdata}\{#AppDir}"; Tasks: use_custom; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "custom\rime_ice.custom.yaml"; DestDir: "{userappdata}\{#AppDir}"; tasks: default_english_mode; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "custom\double_pinyin_mspy.custom.yaml"; DestDir: "{userappdata}\{#AppDir}"; tasks: default_english_mode; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "custom\rime_ice.user.yaml"; DestDir: "{userappdata}\{#AppDir}"; DestName: "user.yaml"; tasks: quanpin; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "custom\double_pinyin_mspy.user.yaml"; DestDir: "{userappdata}\{#AppDir}"; DestName: "user.yaml"; Tasks: shuangpin; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "custom\double_pinyin_qhsp.schema.yaml"; DestDir: "{userappdata}\{#AppDir}"; Tasks: use_custom; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "custom\custom_phrase_double_qhsp.txt"; DestDir: "{userappdata}\{#AppDir}"; Tasks: use_custom; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "custom\rime_ice.custom.yaml"; DestDir: "{userappdata}\{#AppDir}"; tasks: use_custom/default_english_mode; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "custom\double_pinyin_mspy.custom.yaml"; DestDir: "{userappdata}\{#AppDir}"; tasks: use_custom/default_english_mode; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "custom\double_pinyin_qhsp.custom.yaml"; DestDir: "{userappdata}\{#AppDir}"; tasks: use_custom/default_english_mode; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "custom\rime_ice.user.yaml"; DestDir: "{userappdata}\{#AppDir}"; DestName: "user.yaml"; tasks: use_custom/quanpin; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "custom\double_pinyin_mspy.user.yaml"; DestDir: "{userappdata}\{#AppDir}"; DestName: "user.yaml"; Tasks: use_custom/mspy; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "custom\double_pinyin_qhsp.user.yaml"; DestDir: "{userappdata}\{#AppDir}"; DestName: "user.yaml"; Tasks: use_custom/qhsp; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Run]
 Filename: "{tmp}\{#OriginalSetupName}"; StatusMsg: "正在安装"; Parameters: "/S"; Flags: skipifdoesntexist
