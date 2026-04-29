@@ -26,3 +26,13 @@ git clone --recursive --shallow-submodules --depth 1 https://github.com/qt06/wea
 ## 编译
 
 最后使用 inno setup 编译脚本即可生成新的安装包。
+
+## 更新雾凇拼音配置
+
+如果雾凇拼音有更新，可以使用下面命令更新：
+
+```bash
+git submodule update --remote
+```
+
+
