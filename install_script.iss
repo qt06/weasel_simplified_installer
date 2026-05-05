@@ -1,10 +1,11 @@
-﻿#define AppName "小狼毫输入法"
+﻿#define AppName "小狼毫输入法集成雾凇拼音配置"
 #define AppDir "Rime"
 #define AppVersion "0.17.4.41"
+#define SIVersion "26.5.5.0"
 #define AppPublisher "晴天博客"
 #define AppURL "https://www.qt06.com/
 #define VersionInfoCopyright "晴天博客"
-#define VERSIONINFODESCRIPTION "小狼毫输入法安装程序"
+#define VERSIONINFODESCRIPTION "小狼毫输入法集成雾凇拼音配置的简化安装程序"
 #define OriginalSetupName "weasel-0.17.4.41.93eec2d-installer.exe"
 
 [Setup]
@@ -20,8 +21,8 @@ VersionInfoCopyright={#VersionInfoCopyright}
 VersionInfoCompany={#AppPublisher}
 VersionInfoDescription={#VersionInfoDescription}
 VersionInfoProductName={#AppName}
-VersionInfoProductVersion={#AppVersion}
-VersionInfoVersion={#AppVersion}
+VersionInfoProductVersion={#SIVersion}
+VersionInfoVersion={#SIVersion}
 DefaultDirName={userappdata}\{#AppDir}
 DefaultGroupName={#AppName}
 AllowNoIcons=yes
@@ -30,7 +31,7 @@ Uninstallable=no
 InfoBeforeFile=README.md
 ;InfoAfterFile=..\更新日志.txt
 OutputDir=.
-OutputBaseFilename={#AppName}_weasel_{#APPVERSION}_simplified_installer
+OutputBaseFilename={#AppName}_{#SIVersion}_weasel_{#APPVERSION}_simplified_installer
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern

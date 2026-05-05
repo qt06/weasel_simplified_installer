@@ -1,5 +1,2 @@
 patch:
-  switches:
-    - name: ascii_mode
-      reset: 1        # 1 表示默认开启英文模式，0 表示中文
-      states: [ 中文, 英文 ]
+  switches/@0/reset: 1
