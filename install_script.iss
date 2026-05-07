@@ -1,12 +1,30 @@
-﻿#define AppName "小狼毫输入法集成雾凇拼音配置"
+﻿#ifndef AppName
+#define AppName "小狼毫输入法集成雾凇拼音配置"
+#endif
+#ifndef AppDir
 #define AppDir "Rime"
+#endif
+#ifndef AppVersion
 #define AppVersion "0.17.4.41"
+#endif
+#ifndef SIVersion
 #define SIVersion "26.5.5.0"
+#endif
+#ifndef AppPublisher
 #define AppPublisher "晴天博客"
-#define AppURL "https://www.qt06.com/
+#endif
+#ifndef AppURL
+#define AppURL "https://www.qt06.com/"
+#endif
+#ifndef VersionInfoCopyright
 #define VersionInfoCopyright "晴天博客"
+#endif
+#ifndef VersionInfoDescription
 #define VERSIONINFODESCRIPTION "小狼毫输入法集成雾凇拼音配置的简化安装程序"
+#endif
+#ifndef OriginalSetupName
 #define OriginalSetupName "weasel-0.17.4.41.93eec2d-installer.exe"
+#endif
 
 [Setup]
 AppId={{3E322D17-8D9D-4777-A12F-C3AC8DB8393B}
@@ -31,13 +49,13 @@ Uninstallable=no
 InfoBeforeFile=README.md
 ;InfoAfterFile=..\更新日志.txt
 OutputDir=.
-OutputBaseFilename={#AppName}_{#SIVersion}_weasel_{#APPVERSION}_simplified_installer
+OutputBaseFilename=weasel_{#SIVersion}_{#APPVERSION}_simplified_installer
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
 
 [Languages]
-Name: "chinesesimp"; MessagesFile: "compiler:Default.isl"
+Name: "chinesesimp"; MessagesFile: "ChineseSimplified.isl"
 
 
 [Messages]
