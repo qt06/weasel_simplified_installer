@@ -9,6 +9,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: release-${{ github.repository }}
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: windows-latest
@@ -84,12 +88,20 @@ jobs:
           $publishedAt = $selectedRelease.published_at
           $releaseTag = $selectedRelease.tag_name
           $releaseName = $selectedRelease.name
+          $releaseBody = [string]$selectedRelease.body
+          $releaseBodyPath = Join-Path $env:GITHUB_WORKSPACE "official-release-body.md"
+          [System.IO.File]::WriteAllText(
+            $releaseBodyPath,
+            $releaseBody,
+            [System.Text.UTF8Encoding]::new($false)
+          )
 
           Write-Host "Selected release: $releaseName"
           Write-Host "Selected tag: $releaseTag"
           Write-Host "Published at: $publishedAt"
           Write-Host "Selected asset: $assetName"
           Write-Host "Download URL: $assetUrl"
+          Write-Host "Official release body saved to: $releaseBodyPath"
 
           $appVersion = ""
           if ($assetName -match '^weasel-([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)(?:\.[A-Za-z0-9]+)?-installer\.exe$') {
@@ -106,9 +118,32 @@ jobs:
             $buildKind = "nightly"
           }
 
-          $dt = [datetime]$publishedAt
-          $runNumber = $env:GITHUB_RUN_NUMBER
-          $siVersion = "{0}.{1}.{2}.{3}" -f ($dt.ToString("yy")), $dt.Month, $dt.Day, $runNumber
+          $chinaTimeZone = [System.TimeZoneInfo]::FindSystemTimeZoneById("China Standard Time")
+          $releaseDate = [System.TimeZoneInfo]::ConvertTimeFromUtc([datetime]::UtcNow, $chinaTimeZone)
+          $dateVersion = "{0}.{1}.{2}" -f $releaseDate.ToString("yy"), $releaseDate.Month, $releaseDate.Day
+          $tagPrefix = "v$dateVersion."
+
+          $remoteTags = git ls-remote --tags origin "$tagPrefix*"
+          if ($LASTEXITCODE -ne 0) {
+            Write-Error "Failed to query existing release tags."
+            exit 1
+          }
+
+          $dailyReleaseNumber = 0
+          foreach ($line in $remoteTags) {
+            $ref = ($line -split '\s+')[1]
+            if ($ref -match "^refs/tags/$([regex]::Escape($tagPrefix))(?<number>[1-9][0-9]*)$") {
+              $number = [int]$matches['number']
+              if ($number -gt $dailyReleaseNumber) {
+                $dailyReleaseNumber = $number
+              }
+            }
+          }
+
+          $dailyReleaseNumber++
+          $siVersion = "$dateVersion.$dailyReleaseNumber"
+          Write-Host "Release date (China Standard Time): $($releaseDate.ToString('yyyy-MM-dd'))"
+          Write-Host "Generated release version: $siVersion"
 
           "asset_name=$assetName" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
           "asset_url=$assetUrl" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
@@ -116,6 +151,7 @@ jobs:
           "si_version=$siVersion" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
           "release_tag=$releaseTag" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
           "release_name=$releaseName" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+          "release_body_path=$releaseBodyPath" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
           "published_at=$publishedAt" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
           "build_kind=$buildKind" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
 
@@ -203,11 +239,11 @@ jobs:
           "file_path=$($file.FullName)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
 
       - name: Create Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
-          tag_name: v${{ steps.weasel.outputs.si_version }}.${{ github.run_number }}
-          name: weasel_simplified_installer ${{ steps.weasel.outputs.si_version }}.${{ github.run_number }}
-          body_path: README.md
+          tag_name: v${{ steps.weasel.outputs.si_version }}
+          name: weasel_simplified_installer ${{ steps.weasel.outputs.si_version }}
+          body_path: ${{ steps.weasel.outputs.release_body_path }}
           draft: false
           prerelease: false
           files: |
